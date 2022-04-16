@@ -44,7 +44,6 @@ public class Pokemon {
                 + "\n-------------------------------------------\n";
     }
 
-
     @Override
     public boolean equals(Object obj) {
         if (this == obj) {
@@ -62,8 +61,5 @@ public class Pokemon {
         }
         return true;
     }
-    
-    
-    
-    
+
 }

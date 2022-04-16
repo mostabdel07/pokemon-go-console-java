@@ -49,7 +49,7 @@ public class PokeBag implements BasicOperations {
 
     public ArrayList<Pokemon> getPokeBag() {
         return this.pokeBag;
-           
+
     }
 
     public boolean checkBag(Pokemon randomPokemon) {
