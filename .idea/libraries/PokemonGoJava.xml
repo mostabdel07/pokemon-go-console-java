@@ -1,0 +1,9 @@
+<component name="libraryTable">
+  <library name="PokemonGoJava">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/dist/PokemonGoJava.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>
