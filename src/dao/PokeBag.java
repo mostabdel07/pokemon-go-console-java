@@ -48,7 +48,7 @@ public class PokeBag implements BasicOperations {
     }
 
     public ArrayList<Pokemon> getPokeBag() {
-        return this.pokeBag;
+        return this.pokeBag; 
 
     }
 
