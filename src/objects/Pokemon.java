@@ -4,6 +4,7 @@
  */
 package objects;
 
+import java.io.Serializable;
 import java.util.Objects;
 import java.util.Random;
 import utilities.ConsoleColors;
@@ -12,7 +13,7 @@ import utilities.ConsoleColors;
  *
  * @author alumne
  */
-public class Pokemon {
+public class Pokemon implements Serializable{
 
     private final String nombre;
     private int CP;

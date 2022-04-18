@@ -7,7 +7,10 @@ package dao;
 import objects.Pokemon;
 
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.ArrayList;
+import persistence.PersistenceFile;
 
 /**
  *
@@ -16,7 +19,7 @@ import java.util.ArrayList;
 public class PokeBag implements BasicOperations {
 
     private final ArrayList<Pokemon> pokeDex;
-    private final ArrayList<Pokemon> pokeBag;
+    private ArrayList<Pokemon> pokeBag;
 
     public PokeBag() {
         this.pokeDex = new ArrayList<>();
@@ -48,12 +51,25 @@ public class PokeBag implements BasicOperations {
     }
 
     public ArrayList<Pokemon> getPokeBag() {
-        return this.pokeBag; 
+        return this.pokeBag;
 
     }
 
     public boolean checkBag(Pokemon randomPokemon) {
         return pokeBag.contains(randomPokemon);
+    }
+
+    public int saveItemsToFile(String user) throws FileNotFoundException, IOException {
+        if (PersistenceFile.saveAllItems(pokeBag, user)) {
+            return pokeBag.size();
+        } else {
+            return 0;
+        }
+
+    }
+    public int readItems(String user) throws FileNotFoundException, IOException, ClassNotFoundException {
+        pokeBag=PersistenceFile.readAllItems(pokeBag, user);
+        return pokeBag.size();
     }
 
 }

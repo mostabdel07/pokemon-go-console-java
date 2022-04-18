@@ -19,6 +19,8 @@ import java.util.ArrayList;
 import java.util.InputMismatchException;
 import java.util.Random;
 import java.util.Scanner;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
@@ -43,62 +45,62 @@ public class PokemonGoJava {
         File logoAnimation = new File("src/data/assets/logo.pok");
         File logInAnimation = new File("src/data/assets/logIn.pok");
         displayAnimation(logoAnimation);
+        String user;
+        user = userLogIn();
+        displayAnimation(logInAnimation);
+        readItems(user);
+        addOptionsMenu();
 
-        if (userLogIn()) {
-            displayAnimation(logInAnimation);
-            addOptionsMenu();
-
-            int option = -1; // Se le asigna un valor no válido por si entra en la excepción
-            do {
-                mainMenu.showMenu();
-                try {
-                    option = mainMenu.choose(); // Se le asigna el valor elegido
-                } catch (InputMismatchException e) {
-                    System.out.println("No se admiten carácteres.");
-                }
-                switch (option) {
-                    case 1:
-                        //Cazar Pokemons
-                        catchPokemon();
-                        break;
-                    case 2:
-                        //Listar Mochila Pokemon Cazado
-                        displayPokeBag();
-                        break;
-                    case 3:
-                        //Transferir Pokemon
-                        System.out.println("Opción no implementada \nTransferir Pokemon");
-                        break;
-                    case 4:
-                        //Recibir Pokemon transferido
-                        System.out.println("Opción no implementada \nRecibir Pokemon transferido");
-                        break;
-                    case 5:
-                        //Comprar Poké Balls
-                        buyPokeballs();
-                        break;
-                    case 6:
-                        //Listar usuarios que han jugado una partida
-                        displayUsersList();
-                        break;
-                    case 0:
-                        exitGame();
-                        break;
-                    default:
-                        System.out.println(ConsoleColors.TEXT_BRIGHT_RED + "Opción no válida. ❌" + ConsoleColors.TEXT_RESET);
-                        break;
-                }
-            } while (option != 0);
-
-        }
+        int option = -1; // Se le asigna un valor no válido por si entra en la excepción
+        do {
+            mainMenu.showMenu();
+            try {
+                option = mainMenu.choose(); // Se le asigna el valor elegido
+            } catch (InputMismatchException e) {
+                System.out.println("No se admiten carácteres.");
+            }
+            switch (option) {
+                case 1:
+                    //Cazar Pokemons
+                    catchPokemon();
+                    break;
+                case 2:
+                    //Listar Mochila Pokemon Cazado
+                    displayPokeBag();
+                    break;
+                case 3:
+                    //Transferir Pokemon
+                    System.out.println("Opción no implementada \nTransferir Pokemon");
+                    break;
+                case 4:
+                    //Recibir Pokemon transferido
+                    System.out.println("Opción no implementada \nRecibir Pokemon transferido");
+                    break;
+                case 5:
+                    //Comprar Poké Balls
+                    buyPokeballs();
+                    break;
+                case 6:
+                    //Listar usuarios que han jugado una partida
+                    displayUsersList();
+                    break;
+                case 0:
+                    exitGame(user);
+                    break;
+                default:
+                    System.out.println(ConsoleColors.TEXT_BRIGHT_RED + "Opción no válida. ❌" + ConsoleColors.TEXT_RESET);
+                    break;
+            }
+        } while (option != 0);
 
     }
 
-    private void exitGame() {
+    private void exitGame(String user) {
         boolean exit = askExit("➤ Quieres cambiar de usuario? s/n: ");
         if (!exit) {
             startGame();
         } else {
+            saveItems(user);
             System.out.println("Saliendo... ⏱");
         }
     }
@@ -280,7 +282,7 @@ public class PokemonGoJava {
         return data;
     }
 
-    private boolean userLogIn() {
+    private String userLogIn() {
         Scanner sc = new Scanner(System.in);
         System.out.println("*******************      Log In      **********************");
         // Pedir datos
@@ -298,7 +300,7 @@ public class PokemonGoJava {
             if (userFile.exists()) { // Comprobación si existe el usuario (fichero) // TODO None case sensitive
                 if (passwordCheck(userFile, password)) { // Comprobación si la contraseña es correcta
                     System.out.println("Iniciando sesión... ⏱");
-                    return true;
+                    return user;
                 } else {
                     System.out.println(ConsoleColors.TEXT_BRIGHT_RED + "Contraseña incorrecta. ❌" + ConsoleColors.TEXT_RESET);
                 }
@@ -309,11 +311,11 @@ public class PokemonGoJava {
                     System.out.println(ConsoleColors.TEXT_BRIGHT_GREEN + "Se creado el usuario correctamente. ✔️"
                             + ConsoleColors.TEXT_RESET);
                 }
-                return true;
+                return user;
             }
         } while (!passwordCheck(userFile, password) || createFile(userFile, password));
         // Mientras la contraseña sea incorrecta o se crea nuevo usuario
-        return false;
+        return user;
     }
 
     private boolean createFile(File userFile, String data) {
@@ -368,9 +370,9 @@ public class PokemonGoJava {
         Scanner sc = new Scanner(System.in);
         // ARREGLAR CUANDO CP ES MENOR A 10 (y 19)
         int number = randomPokemon.getCP() / 10;
-        //System.out.println("Number " + number);
+        System.out.println("Number " + number);
         int numberRandom = r.nextInt(number) + 1;
-        //System.out.println("number random " + numberRandom);
+        System.out.println("number random " + numberRandom);
         System.out.println("Adivina el numero del 1 al " + number + " para cazar a " + randomPokemon.getNombre());
         int number_user = sc.nextInt();
         if (number_user == numberRandom) {
@@ -378,6 +380,34 @@ public class PokemonGoJava {
         } else {
             return false;
         }
+    }
+
+    private void saveItems(String user) {
+        int num_items;
+        try {
+            num_items = pokeBag.saveItemsToFile(user);
+        } catch (FileNotFoundException ex) {
+            System.out.println("Fichero no existente" + ex.getMessage());
+            num_items = 0;
+        } catch (IOException ex) {
+            System.out.println("Error escritura" + ex.getMessage());
+            num_items = 0;
+        }
+        System.out.println("Items grabados " + num_items);
+    }
+
+    private void readItems(String user) {
+        int num_items = 0;
+        try {
+            num_items = pokeBag.readItems(user);
+            System.out.println("Items leidos " + num_items);
+        } catch (FileNotFoundException ex) {
+        } catch (IOException ex) {
+            System.out.println("Error lectura" + ex.getMessage());
+        } catch (ClassNotFoundException ex) {
+            Logger.getLogger(PokemonGoJava.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
     }
 
 }

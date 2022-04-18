@@ -5,27 +5,25 @@ import objects.Pokemon;
 import java.io.*;
 import java.util.ArrayList;
 
+
 public class PersistenceFile {
-    private final static String pokedex = "pokedex.pok";
 
-    public static boolean saveAllItems(ArrayList<Pokemon> pokedex) throws FileNotFoundException, IOException
-    {
-        FileOutputStream escritura = null;
-        escritura = new FileOutputStream(PersistenceFile.pokedex);
-        ObjectOutputStream StreamDatos = new ObjectOutputStream(escritura);
-
-        StreamDatos.writeObject(pokedex);
+    public static boolean saveAllItems(ArrayList<Pokemon> pokeBag, String user) throws FileNotFoundException, IOException {
+        ObjectOutputStream save = new ObjectOutputStream(new FileOutputStream("src/data/bags/" + user + "_mochila.dat"));
+        save.writeObject(pokeBag);
+        save.close();
 
         return true;
     }
+    
 
-    public static ArrayList<Pokemon> readAllItems(ArrayList<Pokemon> pokedex) throws FileNotFoundException, IOException, ClassNotFoundException
-    {
-        FileInputStream fichero= new FileInputStream(PersistenceFile.pokedex);
-        ObjectInputStream StreamDatos = new ObjectInputStream(fichero);
+    public static ArrayList<Pokemon> readAllItems(ArrayList<Pokemon> pokeBag, String user) throws FileNotFoundException, IOException, ClassNotFoundException {
 
-        ArrayList<Pokemon> read = (ArrayList < Pokemon >) StreamDatos.readObject();
+        ObjectInputStream read = new ObjectInputStream(new FileInputStream("src/data/bags/" + user + "_mochila.dat"));
+        ArrayList<Pokemon> bag = (ArrayList< Pokemon>) read.readObject();
+        read.close();
+        
+        return bag;
 
-        return read;
     }
 }

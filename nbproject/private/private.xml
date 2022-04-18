@@ -5,6 +5,8 @@
         <group>
             <file>file:/C:/Users/USUARIO/Documents/PokemonGoJava-master/src/objects/Pokemon.java</file>
             <file>file:/C:/Users/USUARIO/Documents/PokemonGoJava-master/src/pokemongojava/PokemonGoJava.java</file>
+            <file>file:/C:/Users/USUARIO/Documents/PokemonGoJava-master/src/dao/PokeBag.java</file>
+            <file>file:/C:/Users/USUARIO/Documents/PokemonGoJava-master/src/persistence/PersistenceFile.java</file>
         </group>
     </open-files>
 </project-private>
