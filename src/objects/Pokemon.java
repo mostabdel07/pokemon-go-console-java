@@ -5,7 +5,6 @@
 package objects;
 
 import java.io.Serializable;
-import java.util.Objects;
 import java.util.Random;
 import utilities.ConsoleColors;
 
@@ -15,16 +14,16 @@ import utilities.ConsoleColors;
  */
 public class Pokemon implements Serializable{
 
-    private final String nombre;
+    private final String name;
     private int CP;
 
     public Pokemon(String nombre) {
-        this.nombre = nombre;
+        this.name = nombre;
         this.CP = this.setCP();
     }
 
-    public String getNombre() {
-        return nombre;
+    public String getName() {
+        return name;
     }
 
     public int getCP() {
@@ -40,7 +39,7 @@ public class Pokemon implements Serializable{
     public String showData() {
         return "\n-------------------------------------------"
                 + ConsoleColors.TEXT_BRIGHT_YELLOW + "\nPokédex " + ConsoleColors.TEXT_RESET
-                + "\nNombre: " + nombre
+                + "\nNombre: " + name
                 + "\nCP: " + CP + " ✦"
                 + "\n-------------------------------------------\n";
     }
@@ -53,14 +52,12 @@ public class Pokemon implements Serializable{
         if (obj == null) {
             return false;
         }
-        if (getClass() != obj.getClass()) {
+        if (!(obj instanceof Pokemon))
+        {
             return false;
         }
         final Pokemon other = (Pokemon) obj;
-        if (!Objects.equals(this.nombre, other.nombre)) {
-            return false;
-        }
-        return true;
+        return this.name.equalsIgnoreCase(other.getName());
     }
 
 }

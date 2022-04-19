@@ -70,7 +70,7 @@ public class PokemonGoJava {
                     break;
                 case 3:
                     //Transferir Pokemon
-                    System.out.println("Opción no implementada \nTransferir Pokemon");
+                    transferPokemon();
                     break;
                 case 4:
                     //Recibir Pokemon transferido
@@ -95,8 +95,23 @@ public class PokemonGoJava {
 
     }
 
+    private void transferPokemon() {
+        Scanner sc = new Scanner(System.in);
+        // Pedir datos
+        System.out.print("➤ ¿Que pokemon deseas tranferir?: ");
+        String pokemonToTransfer = sc.nextLine();
+        System.out.print("➤ ¿A que usuario lo quieres tranferir?: ");
+        String userToTransfer = sc.nextLine();
+
+        if(pokeBag.transferPokemon(new Pokemon(pokemonToTransfer), userToTransfer)) {
+            System.out.println("Se ha transferido el pokemon correctamente.");
+        } else {
+            System.out.println("Ha ocurrido algun fallo");
+        }
+    }
+
     private void exitGame(String user) {
-        boolean exit = askExit("➤ Quieres cambiar de usuario? s/n: ");
+        boolean exit = askExit("➤ ¿Quieres cambiar de usuario? s/n: ");
         if (!exit) {
             startGame();
         } else {
@@ -204,7 +219,7 @@ public class PokemonGoJava {
             File numPokeBalls = new File("src/data/assets/numPokeBalls.dat");
             pokeBalls = Integer.parseInt(readFile(numPokeBalls).get(0));
             while (pokeBalls > 0 && !isExit) {
-                // Crear pokemonrandom
+                // Crear pokemon random
                 randomPosition = r.nextInt(readFile(namesFile).size());
                 String name = readFile(namesFile).get(randomPosition);
                 Pokemon randomPokemon = new Pokemon(name);
@@ -373,7 +388,7 @@ public class PokemonGoJava {
         System.out.println("Number " + number);
         int numberRandom = r.nextInt(number) + 1;
         System.out.println("number random " + numberRandom);
-        System.out.println("Adivina el numero del 1 al " + number + " para cazar a " + randomPokemon.getNombre());
+        System.out.println("Adivina el numero del 1 al " + number + " para cazar a " + randomPokemon.getName());
         int number_user = sc.nextInt();
         if (number_user == numberRandom) {
             return true;
@@ -385,7 +400,7 @@ public class PokemonGoJava {
     private void saveItems(String user) {
         int num_items;
         try {
-            num_items = pokeBag.saveItemsToFile(user);
+            num_items = pokeBag.savePokemonsIntoBag(user);
         } catch (FileNotFoundException ex) {
             System.out.println("Fichero no existente" + ex.getMessage());
             num_items = 0;

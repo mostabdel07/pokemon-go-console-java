@@ -8,6 +8,7 @@ import objects.Pokemon;
 
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 import persistence.PersistenceFile;
@@ -36,7 +37,27 @@ public class PokeBag implements BasicOperations {
     }
 
     @Override
-    public boolean transferPokemon(Pokemon pokemonTransfer) {
+    public boolean transferPokemon(Pokemon pokemonToTransfer, String userToTransfer) {
+
+        try {
+            FileOutputStream transferFile = new FileOutputStream("src/data/assets/transfer_" + userToTransfer + ".dat");
+
+            // Buscar Pokemon por indice
+            int posPokemon = pokeBag.indexOf(pokemonToTransfer);
+            PersistenceFile.saveOneItem(pokeBag.get(posPokemon), transferFile);
+
+            // Borrar Pokemon de la mochila
+            pokeBag.remove(posPokemon);
+
+            // Crear o remplazar fichero mochila
+            savePokemonsIntoBag(userToTransfer);
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+
+
         return true;
     }
 
@@ -59,8 +80,9 @@ public class PokeBag implements BasicOperations {
         return pokeBag.contains(randomPokemon);
     }
 
-    public int saveItemsToFile(String user) throws FileNotFoundException, IOException {
-        if (PersistenceFile.saveAllItems(pokeBag, user)) {
+    public int savePokemonsIntoBag(String user) throws FileNotFoundException, IOException {
+        FileOutputStream bagFile = new FileOutputStream("src/data/bags/" + user + "_mochila.dat");
+        if (PersistenceFile.saveAllItems(pokeBag, bagFile)) {
             return pokeBag.size();
         } else {
             return 0;
