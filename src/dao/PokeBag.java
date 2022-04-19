@@ -67,13 +67,16 @@ public class PokeBag implements BasicOperations {
     }
 
     public String[] getUsersWithBag() {
-        File users = new File("src/data/users"); // TODO: Cambiar por la carpeta bags
+        File users = new File("src/data/bags");
         return users.list();
     }
 
     public ArrayList<Pokemon> getPokeBag() {
         return this.pokeBag;
+    }
 
+    public ArrayList<Pokemon> getPokeDex() {
+        return this.pokeDex;
     }
 
     public boolean checkBag(Pokemon randomPokemon) {
@@ -81,14 +84,23 @@ public class PokeBag implements BasicOperations {
     }
 
     public int savePokemonsIntoBag(String user) throws FileNotFoundException, IOException {
-        FileOutputStream bagFile = new FileOutputStream("src/data/bags/" + user + "_mochila.dat");
+        FileOutputStream bagFile = new FileOutputStream("src/data/bags/" + user + "_bag.dat");
         if (PersistenceFile.saveAllItems(pokeBag, bagFile)) {
             return pokeBag.size();
         } else {
             return 0;
         }
-
     }
+
+    public int savePokemonsIntoPokedex(String user) throws FileNotFoundException, IOException {
+        FileOutputStream pokedexFile = new FileOutputStream("src/data/bags/" + user + "_bag.dat");
+        if (PersistenceFile.saveAllItems(pokeDex, pokedexFile)) {
+            return pokeDex.size();
+        } else {
+            return 0;
+        }
+    }
+
     public int readItems(String user) throws FileNotFoundException, IOException, ClassNotFoundException {
         pokeBag=PersistenceFile.readAllItems(pokeBag, user);
         return pokeBag.size();

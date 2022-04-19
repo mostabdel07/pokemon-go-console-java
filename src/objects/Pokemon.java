@@ -38,7 +38,7 @@ public class Pokemon implements Serializable{
 
     public String showData() {
         return "\n-------------------------------------------"
-                + ConsoleColors.TEXT_BRIGHT_YELLOW + "\nPokédex " + ConsoleColors.TEXT_RESET
+                + ConsoleColors.TEXT_BRIGHT_YELLOW + "\nPokémon " + ConsoleColors.TEXT_RESET
                 + "\nNombre: " + name
                 + "\nCP: " + CP + " ✦"
                 + "\n-------------------------------------------\n";

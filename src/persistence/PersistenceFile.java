@@ -8,9 +8,9 @@ import java.util.ArrayList;
 
 public class PersistenceFile {
 
-    public static boolean saveAllItems(ArrayList<Pokemon> pokeBag, FileOutputStream file) throws FileNotFoundException, IOException {
+    public static boolean saveAllItems(ArrayList<Pokemon> arrayList, FileOutputStream file) throws FileNotFoundException, IOException {
         ObjectOutputStream save = new ObjectOutputStream(file);
-        save.writeObject(pokeBag);
+        save.writeObject(arrayList);
         save.close();
 
         return true;

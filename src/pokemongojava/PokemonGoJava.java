@@ -84,6 +84,10 @@ public class PokemonGoJava {
                     //Listar usuarios que han jugado una partida
                     displayUsersList();
                     break;
+                case 7:
+                    //Listar usuarios que han jugado una partida
+                    displayPokeDex();
+                    break;
                 case 0:
                     exitGame(user);
                     break;
@@ -95,6 +99,16 @@ public class PokemonGoJava {
 
     }
 
+    private void displayPokeDex() {
+        ArrayList<Pokemon> pokeDex = pokeBag.getPokeDex();
+        displayLoading();
+        System.out.println("\nPokéDex\n");
+        for (Pokemon pokemon : pokeDex) {
+            System.out.println(pokemon.showData());
+        }
+        System.out.println("Total Pokémons registrados: " + pokeDex.size());
+    }
+
     private void transferPokemon() {
         Scanner sc = new Scanner(System.in);
         // Pedir datos
@@ -103,10 +117,12 @@ public class PokemonGoJava {
         System.out.print("➤ ¿A que usuario lo quieres tranferir?: ");
         String userToTransfer = sc.nextLine();
 
+        System.out.println("Transferiendo " + pokemonToTransfer + " a " + userToTransfer + "... ⏱");
+
         if(pokeBag.transferPokemon(new Pokemon(pokemonToTransfer), userToTransfer)) {
-            System.out.println("Se ha transferido el pokemon correctamente.");
+            System.out.println(ConsoleColors.TEXT_BRIGHT_GREEN + "Se ha transferido correctamente. ✔" + ConsoleColors.TEXT_RESET);
         } else {
-            System.out.println("Ha ocurrido algun fallo");
+            System.out.println(ConsoleColors.TEXT_BRIGHT_RED + "Ha ocurrido algún fallo, el pokemon o usuario no existe. ❌" + ConsoleColors.TEXT_RESET);
         }
     }
 
@@ -160,9 +176,9 @@ public class PokemonGoJava {
         System.out.println("\nLista de usuarios: ");
         for (String usuario : pokeBag.getUsersWithBag()) {
             for (int i = 0; i < usuario.length(); i++) {
-                if (usuario.charAt(i) == '.') { // Comprueba que hay un punto
+                if (usuario.charAt(i) == '_') { // Comprueba que hay una barra baja
                     // Devuelve el nombre del usuario sin la extensión
-                    System.out.println("- " + usuario.substring(5, i));
+                    System.out.println("- " + usuario.substring(0, i));
                 }
             }
         }
@@ -398,17 +414,23 @@ public class PokemonGoJava {
     }
 
     private void saveItems(String user) {
-        int num_items;
+        int sizePokeBag;
+        int sizePokeDex;
+
         try {
-            num_items = pokeBag.savePokemonsIntoBag(user);
+            sizePokeBag = pokeBag.savePokemonsIntoBag(user);
+            sizePokeDex = pokeBag.savePokemonsIntoPokedex(user);
         } catch (FileNotFoundException ex) {
             System.out.println("Fichero no existente" + ex.getMessage());
-            num_items = 0;
+            sizePokeBag = 0;
+            sizePokeDex = 0;
         } catch (IOException ex) {
-            System.out.println("Error escritura" + ex.getMessage());
-            num_items = 0;
+            System.out.println("Error de escritura" + ex.getMessage());
+            sizePokeBag = 0;
+            sizePokeDex = 0;
         }
-        System.out.println("Items grabados " + num_items);
+        System.out.println("Numero de Pokémon en mochila: " + sizePokeBag);
+        System.out.println("Numero de Pokémon registrados en PokéDex: " + sizePokeDex);
     }
 
     private void readItems(String user) {
