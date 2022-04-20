@@ -32,5 +32,20 @@ public class PersistenceFile {
         save.close();
         return true;
     }
-
+    
+    public static Pokemon readOneItem(String user) throws FileNotFoundException, IOException, ClassNotFoundException{
+        File fichero= new File("src/data/assets/transfer_" + user+ ".dat");
+        if(fichero.exists()){
+        ObjectInputStream read= new ObjectInputStream(new FileInputStream(fichero));
+        Pokemon readPokemon= (Pokemon)read.readObject();
+        System.out.println(fichero.delete());
+        return readPokemon;
+        }else{
+            return null;
+        }
+        
+        
+        
+    }
+    
 }

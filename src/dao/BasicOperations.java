@@ -12,7 +12,6 @@ import objects.Pokemon;
  */
 public interface BasicOperations {
     int catchPokemon(Pokemon pokemon);
-    int showPokeBag();
     boolean transferPokemon(Pokemon pokemonToTransfer, String userToTransfer);
     boolean recivePokemon(Pokemon pokemon);
 }

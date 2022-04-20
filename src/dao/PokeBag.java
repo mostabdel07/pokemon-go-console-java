@@ -27,20 +27,22 @@ public class PokeBag implements BasicOperations {
 
     /**
      * Comprueba si el pokemon existe en la mochila y lo añade.
+     *
      * @param pokemon
      * @return integer 0 añadido, -1 no añadido y 1 añadido pero repetido
      */
     @Override
     public int catchPokemon(Pokemon pokemon) {
         int added = 0;
+//        if(pokeBag.size() > 10)
         // TODO: Maximo 10 pokemons en mochila, explicar
-        for (int i = 0; i < pokeBag.size()-1; i++) {
+        for (int i = 0; i < pokeBag.size() - 1; i++) {
             if (pokemon.equals(pokeBag.get(i))) {
                 added = 1;
             }
         }
 
-        if(!pokeBag.add(pokemon)) {
+        if (!pokeBag.add(pokemon)) {
             added = -1;
         }
 
@@ -49,25 +51,18 @@ public class PokeBag implements BasicOperations {
 
     /**
      * Comprueba si el pokemon existe en la pokedex y lo añade.
+     *
      * @param pokemon
      * @return boleano
      */
     public boolean registerPokemon(Pokemon pokemon) {
-        // Comprueba que no este repetido
+        // ERROR. (NO)Comprueba que no este repetido
         for (int i = 0; i < pokeDex.size()-1; i++) {
             if(pokemon.equals(pokeDex.get(i))) {
                 return false;
             }
         }
         return pokeDex.add(pokemon);
-    }
-
-    @Override
-    public int showPokeBag() {
-        for (Pokemon pokemon : pokeBag) {
-            System.out.println(pokemon.showData());
-        }
-        return pokeBag.size();
     }
 
     @Override
@@ -113,6 +108,7 @@ public class PokeBag implements BasicOperations {
     }
 
     public ArrayList<Pokemon> getPokeDex() {
+        Collections.sort(pokeDex);
         return this.pokeDex;
     }
 
@@ -151,7 +147,7 @@ public class PokeBag implements BasicOperations {
         pokeDex = PersistenceFile.readAllItems(pokeDex, pokedexFile);
         return pokeDex.size();
     }
-
+    
     public boolean deletePokemon(Pokemon delete) {
         return pokeBag.remove(delete);
     }

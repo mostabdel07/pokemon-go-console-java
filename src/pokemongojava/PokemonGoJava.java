@@ -17,6 +17,7 @@ import java.util.Random;
 import java.util.Scanner;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import persistence.PersistenceFile;
 
 /**
  *
@@ -26,6 +27,7 @@ public class PokemonGoJava {
 
     private Menu mainMenu;
     private PokeBag pokeBag;
+    private PersistenceFile persistence;
 
     /**
      * @param args the command line arguments
@@ -76,7 +78,7 @@ public class PokemonGoJava {
                     break;
                 case 4:
                     //Recibir Pokemon transferido
-                    System.out.println("Opción no implementada \nRecibir Pokemon transferido");
+                    getPokemonTransferred(user);
                     break;
                 case 5:
                     //Comprar Poké Balls
@@ -109,7 +111,7 @@ public class PokemonGoJava {
         ArrayList<Pokemon> pokeDex = pokeBag.getPokeDex();
         System.out.println("\nPokéDex\n");
         if (pokeDex.size() <= 0) {
-            System.out.println("Todavía no tines ningún pokémon registrado.");
+            System.out.println("Todavía no tienes ningún pokémon registrado.");
         } else {
             Tools.displayLoading();
             for (Pokemon pokemon : pokeDex) {
@@ -121,11 +123,11 @@ public class PokemonGoJava {
     }
 
     private void transferPokemon() {
+        displayPokeBag();
         Scanner sc = new Scanner(System.in);
         // Pedir datos
         System.out.print("➤ ¿Que pokemon deseas tranferir?: ");
         String pokemonToTransfer = sc.nextLine();
-        // TODO: MOSTAR POKEMON A ELEGUIR SEGÚN CP
         System.out.print("Dime sus CombatPoints:");
         int CP = sc.nextInt();
         sc.nextLine();
@@ -140,7 +142,6 @@ public class PokemonGoJava {
             System.out.println(ConsoleColors.TEXT_BRIGHT_RED + "Ha ocurrido algún fallo, el pokemon o usuario no existe. ❌" + ConsoleColors.TEXT_RESET);
         }
     }
-
 
     private void buyPokeballs() {
         Scanner sc = new Scanner(System.in);
@@ -191,7 +192,6 @@ public class PokemonGoJava {
 
     }
 
-
     private boolean askExit(String question) {
         Scanner sc = new Scanner(System.in);
         char option;
@@ -220,7 +220,6 @@ public class PokemonGoJava {
         if (!exit) {
             startGame();
         } else {
-            saveItems(user);
             System.out.println("Saliendo... ⏱");
         }
     }
@@ -248,7 +247,6 @@ public class PokemonGoJava {
                 // Añadir Pokemon
                 if (tryGetPokemon(randomPokemon)) {
 
-
                     switch (pokeBag.catchPokemon(randomPokemon)) {
                         case -1:
                             System.out.println("No se ha podido añadir.");
@@ -262,10 +260,9 @@ public class PokemonGoJava {
                             System.out.println("El pokemon añadido esta repetido.");
                     }
 
-                    if(pokeBag.registerPokemon(randomPokemon)){
+                    if (pokeBag.registerPokemon(randomPokemon)) {
                         System.out.println("Se ha registrado en la PokéDex. ✔️");
                     }
-
 
                 } else {
                     System.out.println("¡" + name + " se escapó!");
@@ -306,7 +303,6 @@ public class PokemonGoJava {
         }
     }
 
-
     private void addOptionsMenu() {
         mainMenu.add(new Option("Cazar Pokémons"));
         mainMenu.add(new Option("Mostrar Pokémons en mochila"));
@@ -320,31 +316,44 @@ public class PokemonGoJava {
     }
 
     private void displayPokeBag() {
-        System.out.println("PokéBag");
-        System.out.println("********************************************");
-        int size = pokeBag.showPokeBag();
-        System.out.println("********************************************");
-        System.out.println("Cantidad Pokémons: " + size);
+        ArrayList<Pokemon> bag = pokeBag.getPokeBag();
+        System.out.println("\nPokéBag\n");
+        if (bag.size() <= 0) {
+            System.out.println("Todavía no has capturado ningún pokémon.");
+        } else {
+            for (Pokemon pokemon : bag) {
+                System.out.println(pokemon.showData());
+            }
+            System.out.println("Cantidad Pokémons: " + bag.size());
+        }
     }
 
     private boolean tryGetPokemon(Pokemon randomPokemon) {
         Random r = new Random();
         Scanner sc = new Scanner(System.in);
-        int number = (randomPokemon.getCP() / 10) + 1;
-        //TODO BORRAR LOS NUM
-        System.out.println("Number " + number);
-        int numberRandom = r.nextInt(number) + 1;
-        System.out.println("number random " + numberRandom);
-        
-        if (numberRandom != 1) {
-            System.out.println("Adivina el numero del 1 al " + number + " para cazar a " + randomPokemon.getName());
-            int number_user = sc.nextInt();
- 
-            if (number_user != numberRandom) { 
-                return false;
-            } 
-        } 
-        
+        if (randomPokemon.getCP() >= 10) {
+            int number = (randomPokemon.getCP() / 10) + 1;
+            //TODO BORRAR LOS NUM
+            System.out.println("Number " + number);
+            int numberRandom = r.nextInt(number) + 1;
+            System.out.println("number random " + numberRandom);
+
+            if (numberRandom != 1) {
+                System.out.println("Adivina el numero del 1 al " + number + " para cazar a " + randomPokemon.getName());
+
+                try {
+                    int number_user = sc.nextInt();
+                    if (number_user != numberRandom) {
+                        return false;
+                    }
+                } catch (InputMismatchException e) {
+                    System.out.println("No se admiten carácteres. ❌");
+                    return false;
+                }
+            }
+        } else { // si CP es menor a 9 se caza directamente sin adivinar
+            return true;
+        }
         return true;
     }
 
@@ -389,17 +398,39 @@ public class PokemonGoJava {
     }
 
     private void deletePokemon() {
+        displayPokeBag();
         Scanner sc = new Scanner(System.in);
         System.out.println("Dime el nombre del Pokemon a eliminar de la PokeBag:");
         String name = sc.nextLine();
-        // TODO: Mostrar cual de todos
         System.out.println("Dime sus CombatPoints:");
-        int CP = sc.nextInt();
-        Pokemon delete = new Pokemon(name, CP);
-        if (pokeBag.deletePokemon(delete)) {
-            System.out.println("Pokemon eliminado con exito");
-        } else {
-            System.out.println("Pokemon no existe, no se ha eliminado");
+        try {
+            int CP = sc.nextInt();
+            Pokemon delete = new Pokemon(name, CP);
+            if (pokeBag.deletePokemon(delete)) {
+                System.out.println("Pokemon eliminado con exito");
+            } else {
+                System.out.println("Pokemon no existe, no se ha eliminado");
+            }
+        } catch (InputMismatchException e) {
+            System.out.println("No se admiten carácteres. ❌");
+        }
+
+    }
+
+    private void getPokemonTransferred(String user) {
+        try {
+            Pokemon pokemonTransfer = persistence.readOneItem(user);
+            if (pokemonTransfer != null) {
+                pokeBag.catchPokemon(pokemonTransfer);
+                pokeBag.registerPokemon(pokemonTransfer);
+                System.out.println("Pokemon transferido correctamente");
+            } else {
+                System.out.println("No tienes Pokemons por transferir");
+            }
+        } catch (IOException ex) {
+            Logger.getLogger(PokemonGoJava.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (ClassNotFoundException ex) {
+            Logger.getLogger(PokemonGoJava.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 }
