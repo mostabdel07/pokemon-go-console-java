@@ -16,9 +16,9 @@ public class PersistenceFile {
         return true;
     }
 
-    public static ArrayList<Pokemon> readAllItems(ArrayList<Pokemon> pokeBag, String user) throws FileNotFoundException, IOException, ClassNotFoundException {
+    public static ArrayList<Pokemon> readAllItems(ArrayList<Pokemon> pokeBag, FileInputStream file) throws FileNotFoundException, IOException, ClassNotFoundException {
 
-        ObjectInputStream read = new ObjectInputStream(new FileInputStream("src/data/bags/" + user + "_mochila.dat"));
+        ObjectInputStream read = new ObjectInputStream(file);
         ArrayList<Pokemon> bag = (ArrayList< Pokemon>) read.readObject();
         read.close();
         

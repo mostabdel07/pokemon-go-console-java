@@ -101,12 +101,17 @@ public class PokemonGoJava {
 
     private void displayPokeDex() {
         ArrayList<Pokemon> pokeDex = pokeBag.getPokeDex();
-        displayLoading();
         System.out.println("\nPokéDex\n");
-        for (Pokemon pokemon : pokeDex) {
-            System.out.println(pokemon.showData());
+        if(pokeDex.size() <= 0) {
+            System.out.println("Todavía no tines ningún pokémon registrado.");
+        }else {
+            displayLoading();
+            for (Pokemon pokemon : pokeDex) {
+                System.out.println(pokemon.showData());
+            }
+
+            System.out.println("Total Pokémons registrados: " + pokeDex.size());
         }
-        System.out.println("Total Pokémons registrados: " + pokeDex.size());
     }
 
     private void transferPokemon() {
@@ -279,8 +284,8 @@ public class PokemonGoJava {
     private void showPokemon(String name) {
         File nameFile = new File("src/data/pokemons/" + name + ".pok");
         try {
-            for (String linea : readFile(nameFile)) {
-                System.out.println(ConsoleColors.TEXT_BRIGHT_GREEN + linea + ConsoleColors.TEXT_RESET);
+            for (String line : readFile(nameFile)) {
+                System.out.println(ConsoleColors.TEXT_BRIGHT_GREEN + line.replace("printf(\"", "").replace("\\n\");", "") + ConsoleColors.TEXT_RESET);
                 Thread.sleep(80);
             }
             System.out.println();
@@ -385,6 +390,7 @@ public class PokemonGoJava {
         mainMenu.add(new Option("Recibir Pokémon transferido"));
         mainMenu.add(new Option("Comprar Poké Balls"));
         mainMenu.add(new Option("Mostar usuarios que han jugado"));
+        mainMenu.add(new Option("Abrir PokéDex"));
         mainMenu.add(new Option("Salir"));
     }
 
@@ -436,7 +442,9 @@ public class PokemonGoJava {
     private void readItems(String user) {
         int num_items = 0;
         try {
-            num_items = pokeBag.readItems(user);
+            num_items = pokeBag.readPokeBag(user);
+            System.out.println("Items leidos " + num_items);
+            num_items = pokeBag.readPokeDex(user);
             System.out.println("Items leidos " + num_items);
         } catch (FileNotFoundException ex) {
         } catch (IOException ex) {

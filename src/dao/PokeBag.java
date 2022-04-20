@@ -6,10 +6,7 @@ package dao;
 
 import objects.Pokemon;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
+import java.io.*;
 import java.util.ArrayList;
 import persistence.PersistenceFile;
 
@@ -19,7 +16,7 @@ import persistence.PersistenceFile;
  */
 public class PokeBag implements BasicOperations {
 
-    private final ArrayList<Pokemon> pokeDex;
+    private ArrayList<Pokemon> pokeDex;
     private ArrayList<Pokemon> pokeBag;
 
     public PokeBag() {
@@ -44,19 +41,21 @@ public class PokeBag implements BasicOperations {
 
             // Buscar Pokemon por indice
             int posPokemon = pokeBag.indexOf(pokemonToTransfer);
-            PersistenceFile.saveOneItem(pokeBag.get(posPokemon), transferFile);
+            if(posPokemon > -1){
+                PersistenceFile.saveOneItem(pokeBag.get(posPokemon), transferFile);
 
-            // Borrar Pokemon de la mochila
-            pokeBag.remove(posPokemon);
+                // Borrar Pokemon de la mochila
+                pokeBag.remove(posPokemon);
 
-            // Crear o remplazar fichero mochila
-            savePokemonsIntoBag(userToTransfer);
+                // Crear o remplazar fichero mochila
+                savePokemonsIntoBag(userToTransfer);
+            } else {
+                return false;
+            }
 
         } catch (IOException e) {
             e.printStackTrace();
         }
-
-
 
         return true;
     }
@@ -83,6 +82,7 @@ public class PokeBag implements BasicOperations {
         return pokeBag.contains(randomPokemon);
     }
 
+    // Save into binary files
     public int savePokemonsIntoBag(String user) throws FileNotFoundException, IOException {
         FileOutputStream bagFile = new FileOutputStream("src/data/bags/" + user + "_bag.dat");
         if (PersistenceFile.saveAllItems(pokeBag, bagFile)) {
@@ -93,7 +93,7 @@ public class PokeBag implements BasicOperations {
     }
 
     public int savePokemonsIntoPokedex(String user) throws FileNotFoundException, IOException {
-        FileOutputStream pokedexFile = new FileOutputStream("src/data/bags/" + user + "_bag.dat");
+        FileOutputStream pokedexFile = new FileOutputStream("src/data/pokedex/" + user + "_pokedex.dat");
         if (PersistenceFile.saveAllItems(pokeDex, pokedexFile)) {
             return pokeDex.size();
         } else {
@@ -101,9 +101,18 @@ public class PokeBag implements BasicOperations {
         }
     }
 
-    public int readItems(String user) throws FileNotFoundException, IOException, ClassNotFoundException {
-        pokeBag=PersistenceFile.readAllItems(pokeBag, user);
+
+    // Read binary files
+    public int readPokeBag(String user) throws FileNotFoundException, IOException, ClassNotFoundException {
+        FileInputStream bagFile = new FileInputStream("src/data/bags/" + user + "_bag.dat");
+        pokeBag=PersistenceFile.readAllItems(pokeBag, bagFile);
         return pokeBag.size();
+    }
+
+    public int readPokeDex(String user) throws IOException, ClassNotFoundException {
+        FileInputStream pokedexFile = new FileInputStream("src/data/pokedex/" + user + "_pokedex.dat");
+        pokeDex=PersistenceFile.readAllItems(pokeDex, pokedexFile);
+        return pokeDex.size();
     }
 
 }
