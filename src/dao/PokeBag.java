@@ -8,6 +8,7 @@ import objects.Pokemon;
 
 import java.io.*;
 import java.util.ArrayList;
+import java.util.Collections;
 import persistence.PersistenceFile;
 
 /**
@@ -20,8 +21,8 @@ public class PokeBag implements BasicOperations {
     private ArrayList<Pokemon> pokeBag;
 
     public PokeBag() {
-        this.pokeDex = new ArrayList<>();
-        this.pokeBag = new ArrayList<>();
+        this.pokeDex = new ArrayList<>(); // TODO: No acepta repetidos, explicar
+        this.pokeBag = new ArrayList<>(); // TODO: Maximo 10 pokemons, explicar
     }
 
     @Override
@@ -41,7 +42,7 @@ public class PokeBag implements BasicOperations {
 
             // Buscar Pokemon por indice
             int posPokemon = pokeBag.indexOf(pokemonToTransfer);
-            if(posPokemon > -1){
+            if (posPokemon > -1) {
                 PersistenceFile.saveOneItem(pokeBag.get(posPokemon), transferFile);
 
                 // Borrar Pokemon de la mochila
@@ -71,6 +72,7 @@ public class PokeBag implements BasicOperations {
     }
 
     public ArrayList<Pokemon> getPokeBag() {
+        Collections.sort(pokeBag);
         return this.pokeBag;
     }
 
@@ -101,18 +103,21 @@ public class PokeBag implements BasicOperations {
         }
     }
 
-
     // Read binary files
     public int readPokeBag(String user) throws FileNotFoundException, IOException, ClassNotFoundException {
         FileInputStream bagFile = new FileInputStream("src/data/bags/" + user + "_bag.dat");
-        pokeBag=PersistenceFile.readAllItems(pokeBag, bagFile);
+        pokeBag = PersistenceFile.readAllItems(pokeBag, bagFile);
         return pokeBag.size();
     }
 
     public int readPokeDex(String user) throws IOException, ClassNotFoundException {
         FileInputStream pokedexFile = new FileInputStream("src/data/pokedex/" + user + "_pokedex.dat");
-        pokeDex=PersistenceFile.readAllItems(pokeDex, pokedexFile);
+        pokeDex = PersistenceFile.readAllItems(pokeDex, pokedexFile);
         return pokeDex.size();
+    }
+
+    public boolean deletePokemon(Pokemon delete) {
+        return pokeBag.remove(delete);
     }
 
 }

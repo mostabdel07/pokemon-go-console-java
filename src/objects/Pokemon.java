@@ -12,7 +12,7 @@ import utilities.ConsoleColors;
  *
  * @author alumne
  */
-public class Pokemon implements Serializable{
+public class Pokemon implements Serializable, Comparable<Pokemon> {
 
     private final String name;
     private int CP;
@@ -20,6 +20,11 @@ public class Pokemon implements Serializable{
     public Pokemon(String nombre) {
         this.name = nombre;
         this.CP = this.setCP();
+    }
+
+    public Pokemon(String name, int CP) {
+        this.name = name;
+        this.CP = CP;
     }
 
     public String getName() {
@@ -52,12 +57,29 @@ public class Pokemon implements Serializable{
         if (obj == null) {
             return false;
         }
-        if (!(obj instanceof Pokemon))
-        {
+        final Pokemon other = (Pokemon) obj;
+        if (this.CP != other.CP) {
             return false;
         }
-        final Pokemon other = (Pokemon) obj;
+
+        if (!(obj instanceof Pokemon)) {
+            return false;
+        }
         return this.name.equalsIgnoreCase(other.getName());
+    }
+
+    @Override
+    public int compareTo(Pokemon o) {
+        int resultado = 0;
+        if (this.CP < o.CP) {
+            resultado = -1;
+        } else if (this.CP > o.CP) {
+            resultado = 1;
+        }
+        else {
+            return this.name.compareTo(o.name);
+        }
+        return resultado;
     }
 
 }
