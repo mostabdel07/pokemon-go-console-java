@@ -11,8 +11,8 @@ import objects.Pokemon;
  * @author alumne
  */
 public interface BasicOperations {
-    boolean catchPokemon(Pokemon pokemon);
-    void showBag();
+    int catchPokemon(Pokemon pokemon);
+    int showPokeBag();
     boolean transferPokemon(Pokemon pokemonToTransfer, String userToTransfer);
     boolean recivePokemon(Pokemon pokemon);
 }

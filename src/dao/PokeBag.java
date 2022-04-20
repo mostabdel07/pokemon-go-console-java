@@ -21,17 +21,53 @@ public class PokeBag implements BasicOperations {
     private ArrayList<Pokemon> pokeBag;
 
     public PokeBag() {
-        this.pokeDex = new ArrayList<>(); // TODO: No acepta repetidos, explicar
-        this.pokeBag = new ArrayList<>(); // TODO: Maximo 10 pokemons, explicar
+        this.pokeDex = new ArrayList<>();
+        this.pokeBag = new ArrayList<>();
+    }
+
+    /**
+     * Comprueba si el pokemon existe en la mochila y lo añade.
+     * @param pokemon
+     * @return integer 0 añadido, -1 no añadido y 1 añadido pero repetido
+     */
+    @Override
+    public int catchPokemon(Pokemon pokemon) {
+        int added = 0;
+        // TODO: Maximo 10 pokemons en mochila, explicar
+        for (int i = 0; i < pokeBag.size()-1; i++) {
+            if (pokemon.equals(pokeBag.get(i))) {
+                added = 1;
+            }
+        }
+
+        if(!pokeBag.add(pokemon)) {
+            added = -1;
+        }
+
+        return added;
+    }
+
+    /**
+     * Comprueba si el pokemon existe en la pokedex y lo añade.
+     * @param pokemon
+     * @return boleano
+     */
+    public boolean registerPokemon(Pokemon pokemon) {
+        // Comprueba que no este repetido
+        for (int i = 0; i < pokeDex.size()-1; i++) {
+            if(pokemon.equals(pokeDex.get(i))) {
+                return false;
+            }
+        }
+        return pokeDex.add(pokemon);
     }
 
     @Override
-    public boolean catchPokemon(Pokemon pokemon) {
-        return pokeBag.add(pokemon) && pokeDex.add(pokemon);
-    }
-
-    @Override
-    public void showBag() {
+    public int showPokeBag() {
+        for (Pokemon pokemon : pokeBag) {
+            System.out.println(pokemon.showData());
+        }
+        return pokeBag.size();
     }
 
     @Override
