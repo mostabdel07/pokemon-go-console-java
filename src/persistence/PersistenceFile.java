@@ -38,7 +38,7 @@ public class PersistenceFile {
         if(fichero.exists()){
         ObjectInputStream read= new ObjectInputStream(new FileInputStream(fichero));
         Pokemon readPokemon= (Pokemon)read.readObject();
-        System.out.println(fichero.delete());
+        fichero.delete();
         return readPokemon;
         }else{
             return null;
