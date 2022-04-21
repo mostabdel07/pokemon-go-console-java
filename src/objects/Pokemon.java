@@ -58,9 +58,9 @@ public class Pokemon implements Serializable, Comparable<Pokemon> {
             return false;
         }
         final Pokemon other = (Pokemon) obj;
-        if (this.CP != other.CP) {
-            return false;
-        }
+//        if (this.CP != other.CP) {
+//            return false;
+//        }
 
         if (!(obj instanceof Pokemon)) {
             return false;

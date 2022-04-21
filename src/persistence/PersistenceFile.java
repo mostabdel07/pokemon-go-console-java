@@ -8,7 +8,7 @@ import java.util.ArrayList;
 
 public class PersistenceFile {
 
-    public static boolean saveAllItems(ArrayList<Pokemon> arrayList, FileOutputStream file) throws FileNotFoundException, IOException {
+    public static boolean saveAllItems(ArrayList<Pokemon> arrayList, FileOutputStream file) throws IOException {
         ObjectOutputStream save = new ObjectOutputStream(file);
         save.writeObject(arrayList);
         save.close();
@@ -16,7 +16,7 @@ public class PersistenceFile {
         return true;
     }
 
-    public static ArrayList<Pokemon> readAllItems(ArrayList<Pokemon> pokeBag, FileInputStream file) throws FileNotFoundException, IOException, ClassNotFoundException {
+    public static ArrayList<Pokemon> readAllItems(FileInputStream file) throws IOException, ClassNotFoundException {
 
         ObjectInputStream read = new ObjectInputStream(file);
         ArrayList<Pokemon> bag = (ArrayList< Pokemon>) read.readObject();
@@ -26,14 +26,14 @@ public class PersistenceFile {
 
     }
 
-    public static boolean saveOneItem(Pokemon pokemon, FileOutputStream file) throws FileNotFoundException, IOException {
+    public static boolean saveOneItem(Pokemon pokemon, FileOutputStream file) throws IOException {
         ObjectOutputStream save = new ObjectOutputStream(file);
         save.writeObject(pokemon);
         save.close();
         return true;
     }
     
-    public static Pokemon readOneItem(String user) throws FileNotFoundException, IOException, ClassNotFoundException{
+    public static Pokemon readOneItem(String user) throws IOException, ClassNotFoundException{
         File fichero= new File("src/data/assets/transfer_" + user+ ".dat");
         if(fichero.exists()){
         ObjectInputStream read= new ObjectInputStream(new FileInputStream(fichero));

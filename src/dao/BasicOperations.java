@@ -6,12 +6,14 @@ package dao;
 
 import objects.Pokemon;
 
+import java.io.IOException;
+
 /**
  *
  * @author alumne
  */
 public interface BasicOperations {
-    int catchPokemon(Pokemon pokemon);
+    boolean catchPokemon(Pokemon pokemon);
     boolean transferPokemon(Pokemon pokemonToTransfer, String userToTransfer);
-    boolean recivePokemon(Pokemon pokemon);
+    boolean recivePokemon(String user) throws IOException, ClassNotFoundException;
 }
