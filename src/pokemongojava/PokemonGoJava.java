@@ -89,6 +89,14 @@ public class PokemonGoJava {
                     //Deshacerse de Pokemon de la mochila
                     deletePokemon();
                     break;
+                case 8:
+                    //Guardar en formato JSON
+                    savePokemonsJSON(user);
+                    break;
+                case 9:
+                    //Guardar en formato JSON
+                    loadPokemonsJSON(user);
+                    break;
                 case 0:
                     exitGame(user);
                     break;
@@ -317,6 +325,8 @@ public class PokemonGoJava {
         mainMenu.add(new Option("Comprar Poké Balls"));
         mainMenu.add(new Option("Mostar usuarios que han jugado"));
         mainMenu.add(new Option("Deshacerse de Pokemon"));
+        mainMenu.add(new Option("Guardar en formato JSON"));
+        mainMenu.add(new Option("Cargar mochila en formato JSON"));
         mainMenu.add(new Option("Salir"));
     }
 
@@ -415,5 +425,27 @@ public class PokemonGoJava {
         } catch (ClassNotFoundException | IOException e) {
             e.printStackTrace();
         }
+    }
+
+    private void savePokemonsJSON(String user) {
+        try {
+            pokeBag.savePokemonsJSON(user);
+            System.out.println("Se ha guardado correctamente en formato JSON.");
+        } catch (IOException ex) {
+            Logger.getLogger(PokemonGoJava.class.getName()).log(Level.SEVERE, null, ex);
+             System.out.println("No se ha podido guardar.");
+        }
+    }
+
+    private void loadPokemonsJSON(String user) {
+        
+        try {
+            pokeBag.loadPokemonsJSON(user);
+            System.out.println("Se ha cargado los datos correctamente.");
+        } catch (IOException ex) {
+            Logger.getLogger(PokemonGoJava.class.getName()).log(Level.SEVERE, null, ex);
+            System.out.println("No se ha podido cargar.");
+        }
+        
     }
 }

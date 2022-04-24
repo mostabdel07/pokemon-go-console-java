@@ -4,13 +4,18 @@
  */
 package dao;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.reflect.TypeToken;
 import objects.Pokemon;
 
 import java.io.*;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.List;
 
 import persistence.PersistenceFile;
+import utilities.Tools;
 
 /**
  * @author alumne
@@ -106,6 +111,26 @@ public class PokeBag implements BasicOperations {
         FileInputStream bagFile = new FileInputStream("src/data/bags/" + user + "_bag.dat");
         pokeBag = PersistenceFile.readAllItems(bagFile);
         return pokeBag.size();
+    }
+    
+        // Save into JSON files
+    public boolean savePokemonsJSON(String user) throws IOException {
+        Gson json = new GsonBuilder().setPrettyPrinting().create();
+        File file = new File("src/data/bags/" + user + "_bag.json");
+        
+        String response = json.toJson(pokeBag);      
+
+        return Tools.createFile(file, response);
+        
+    }
+    
+            // Save into binary files
+    public void loadPokemonsJSON(String user) throws IOException {
+        Gson json = new Gson();
+                   
+        BufferedReader br = new BufferedReader(new FileReader("src/data/bags/" + user + "_bag.json"));
+
+        pokeBag = json.fromJson(br, new TypeToken<List<Pokemon>>(){}.getType());     
     }
 
 }

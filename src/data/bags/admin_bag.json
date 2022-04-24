@@ -1,0 +1,22 @@
+[
+  {
+    "name": "Bulbasaur",
+    "CP": 5
+  },
+  {
+    "name": "Charmander",
+    "CP": 15
+  },
+  {
+    "name": "Pikachu",
+    "CP": 51
+  },
+  {
+    "name": "Charmander",
+    "CP": 53
+  },
+  {
+    "name": "Pikachu",
+    "CP": 100
+  }
+]
